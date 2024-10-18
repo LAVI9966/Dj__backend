@@ -29,7 +29,9 @@ const sendEmail = async (to, subject, text, html) => {
         console.log("eror", error)
     }
 }
-
+app.get('/', (req, res) => {
+    return res.send("hello world")
+})
 app.post('/send_email', async (req, res) => {
     const { to, subject, text, html } = req.body;
     console.log("pop")
