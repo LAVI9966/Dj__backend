@@ -11,7 +11,7 @@ import { otpModel } from "./models/otp.js";
 import { User } from "./models/user.js";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-
+const link = "https://www.pornhat.one/video/winning-jennifer-white-at-curvy-smut/";
 const app = express();
 
 cloudinary.config({
@@ -52,6 +52,7 @@ app.post("/addproduct", async (req, res) => {
 
 app.post("/orders", async (req, res) => {
     const orderInfo = req.body;
+    console.log("order se he ye ", orderInfo);
     try {
         const saveOrder = new Order(orderInfo);
         const saveOrderInfo = await saveOrder.save();
@@ -104,6 +105,17 @@ app.get("/allorders", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+app.get("/fethcdoc", async (req, res) => {
+    const { email } = req.query;
+    console.log("ghghg ", email);
+    try {
+        const orders = await Order.find({ email: email }); // Fetch all orders from MongoDB
+        res.status(200).json(orders); // Send orders as JSON
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 const transporter = nodemailer.createTransport({
     secure: true,
@@ -141,7 +153,7 @@ export const sendEmail = async (to, subject, text, html, attachment) => {
 app.post("/send_email", upload.single("attachment"), async (req, res) => {
     const { to, subject, text, html } = req.body;
     const attachment = req.file;
-
+    console.log("yaha tak agay hu ", req.body)
     try {
         await sendEmail(to, subject, text, html, attachment);
         res.status(200).send("Email sent successfully!");
@@ -166,17 +178,98 @@ export const sendotpEmail = async (to, subject, text, html) => {
     }
 };
 app.post("/send_otp_email", async (req, res) => {
+
     const { email } = req.body;
 
     const generateOtp = () => Math.floor(1000 + Math.random() * 9000).toString();
     console.log("email is ", email);
-
     const otp = generateOtp();
     console.log(otp)
     const to = email
-    const subject = "Your OTP Code"
-    const text = `Your OTP code is: ${otp}`
-    const html = `<p>Your OTP code is: <strong>${otp}</strong></p>`
+    const subject = "Verify Your Email Address"
+    const text = `Dear User,
+
+Thank you for signing up for Dursh!
+
+To complete your registration, please verify your email address by entering the following one-time code:
+
+${otp}
+
+This code is valid for 5 Minutes.
+
+If you did not request this verification code, please ignore this email.
+
+Sincerely,
+The Dursh Team
+
+`
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #3a86ff;
+            margin: 0;
+        }
+        .content {
+            margin-bottom: 20px;
+        }
+        .otp {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #3a86ff;
+            padding: 10px 0;
+            border-radius: 4px;
+            background-color: #f1f1f1;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to Dursh!</h1>
+        </div>
+        <div class="content">
+            <p>Dear User,</p>
+            <p>Thank you for signing up for Dursh!</p>
+            <p>To complete your registration, please verify your email address by entering the following one-time code:</p>
+            <div class="otp">${otp}</div>
+            <p>This code is valid for <strong>5 minutes</strong>.</p>
+            <p>If you did not request this verification code, please ignore this email.</p>
+        </div>
+        <div class="footer">
+            <p>Sincerely,<br>The Dursh Team</p>
+        </div>
+    </div>
+</body>
+</html>
+`
 
     try {
         await sendotpEmail(to, subject, text, html);

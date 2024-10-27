@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    pincode: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -35,7 +39,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    mobileNo: {
+    phoneNumber: {
         type: String,
         required: true,
         unique: true, // Ensures mobile number is unique
