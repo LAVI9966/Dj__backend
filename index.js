@@ -9,6 +9,8 @@ import multer from "multer";
 import cloudinary from "cloudinary";
 import { otpModel } from "./models/otp.js";
 import { User } from "./models/user.js";
+import { FavSong } from "./models/favsong.js";
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const link = "https://www.pornhat.one/video/winning-jennifer-white-at-curvy-smut/";
@@ -324,6 +326,69 @@ app.get('/getuser', async (req, res) => {
         console.log(error);
     }
 })
+
+
+app.post('/add-to-favorites', async (req, res) => {
+    const { userid, songid } = req.body;
+
+    try {
+        // Find the user's favorites document
+        const favDocument = await FavSong.findOne({ userid });
+
+        if (favDocument) {
+            // Check if the song is already in the list
+            const songExists = favDocument.songlist.some((song) => song.songid === songid);
+
+            if (songExists) {
+                // If song exists, remove it
+                await FavSong.updateOne(
+                    { userid },
+                    { $pull: { songlist: { songid } } } // Removes the song ID from the list
+                );
+                return res.status(200).send({ message: 'Song removed from favorites!' });
+            } else {
+                // If song does not exist, add it
+                await FavSong.updateOne(
+                    { userid },
+                    { $addToSet: { songlist: { songid } } } // Adds the song ID to the list
+                );
+                return res.status(200).send({ message: 'Song added to favorites!' });
+            }
+        } else {
+            // If the document for the user doesn't exist, create it with the song
+            await FavSong.updateOne(
+                { userid },
+                { $addToSet: { songlist: { songid } } },
+                { upsert: true }
+            );
+            res.status(200).send({ message: 'Song added to favorites!' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error updating favorites', error });
+    }
+});
+app.get('/get-favorites', async (req, res) => {
+    const { userid } = req.query; // Expecting userid to be passed as a 
+
+    console.log("user id eh ye ", userid)
+    if (!userid) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    try {
+        const favoriteDocument = await FavSong.findOne({ userid: userid });
+
+        if (!favoriteDocument) {
+            return res.status(404).json({ message: 'No favorites found for this user.' });
+        }
+
+        return res.status(200).json(favoriteDocument);
+    } catch (error) {
+        console.error("Error fetching favorite songs:", error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+});
+
 app.listen(3000, () => {
     console.log("Server is listening on port", 3000);
 });
