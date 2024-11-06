@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     },
     verified: {
         type: Boolean,
-        required: true,
+        default: true,
     },
     artistName: {
         type: String,

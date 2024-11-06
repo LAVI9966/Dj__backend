@@ -1,5 +1,6 @@
 import express from "express";
 // import { sendEmail } from "./utils/sendmail.js";
+
 import { MusicTrack } from "./models/musicTrack.js";
 import nodemailer from "nodemailer";
 import cors from "cors";
@@ -14,12 +15,18 @@ import { FavSong } from "./models/favsong.js";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const link = "https://www.pornhat.one/video/winning-jennifer-white-at-curvy-smut/";
+const link2 = "https://www.naughtymachinima.com/video/89837/natural-wildness-dual-sub-futa-1080h-radroachhd";
 const app = express();
-
+//ye mera wala config he
+// cloudinary.config({
+//     cloud_name: "dggtmwjwt",
+//     api_key: "981491236798984",
+//     api_secret: "xjN3m0VHyofvLVyO4WhkgBC7tfk"
+// });
 cloudinary.config({
-    cloud_name: "dggtmwjwt",
-    api_key: "981491236798984",
-    api_secret: "xjN3m0VHyofvLVyO4WhkgBC7tfk"
+    cloud_name: "dxvhzvf5j",
+    api_key: "446619714517729",
+    api_secret: "lXdQ1v__1-Kg7CA86C6efludBws"
 });
 
 app.use(express.json());
@@ -27,6 +34,7 @@ app.use(cors({ origin: "http://localhost:5173" }));
 app.use(cors());
 
 app.get("/", (req, res) => {
+    console.log("Chud gaye guru")
     return res.send("hello world");
 });
 
@@ -307,7 +315,7 @@ app.post('/adduser', async (req, res) => {
     console.log("hrlllo")
     console.log(req.body)
     try {
-        const user = new User(req.body.userData);
+        const user = new User(req.body.chato);
         const saveuser = await user.save();
         res.status(201).json(saveuser);
     } catch (error) {
@@ -388,7 +396,23 @@ app.get('/get-favorites', async (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
 });
+app.get('/fetchsong', async (req, res) => {
+    const { songid } = req.query;
+    console.log("Fuck me hard ", songid)
+    try {
+        const song = await MusicTrack.findOne({ _id: songid });
+        console.log("pussy ", song)
+        return res.status(200).json(song);
+    } catch (error) {
+        console.error("Error fetching  songs:", error);
+        return res.status(500).json({ message: 'Server error' });
 
-app.listen(3000, () => {
+    }
+
+})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
     console.log("Server is listening on port", 3000);
 });
+
+

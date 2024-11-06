@@ -17,6 +17,12 @@ const musicTrackSchema = new mongoose.Schema({
         url: { type: String, required: true },
         publicId: { type: String, required: true }
     },
+    mp3Url: {
+        type: String, required: true
+    },
+    coverUrl: {
+        type: String, required: true
+    },
     wavFile: {
         type: String, required: true
     },
