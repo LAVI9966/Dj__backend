@@ -30,8 +30,21 @@ cloudinary.config({
 });
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
-app.use(cors());
+const allowedOrigins = [
+    'http://localhost:5173', // Local development
+    'https://www.durshbeats.store', // Live frontend
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Allow cookies if needed
+}));
 
 app.get("/", (req, res) => {
     console.log("Chud gaye guru")
