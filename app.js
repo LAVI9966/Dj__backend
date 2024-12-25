@@ -13,7 +13,7 @@ import { User } from "./models/user.js";
 import { FavSong } from "./models/favsong.js";
 import path from 'path'
 import { fileURLToPath } from 'url';
-
+import fs from 'fs-extra';
 // Define __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +34,14 @@ cloudinary.config({
     api_key: "446619714517729",
     api_secret: "lXdQ1v__1-Kg7CA86C6efludBws"
 });
+
+// const currentDir = __dirname;
+// const destinationFolder = path.join(currentDir, '/dist');
+// const sourceFolder = path.join(currentDir, '../frontend/dist');
+// fs.copy(sourceFolder, destinationFolder)
+//     .then(() => console.log('Folder copied successfully!'))
+//     .catch(err => console.error(err));
+
 
 app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173" }));
@@ -143,14 +151,14 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     auth: {
-        user: "lavishgehlod@gmail.com",
+        user: "durshbeats@gmail.com",
         pass: "ntvjgguhsntpzspt"
     }
 });
 
 export const sendEmail = async (to, subject, text, html, attachment) => {
     const mailOptions = {
-        from: "lavishgehlod@gmail.com",
+        from: "durshbeats@gmail.com",
         to,
         subject,
         text,
@@ -184,7 +192,7 @@ app.post("/send_email", upload.single("attachment"), async (req, res) => {
 });
 export const sendotpEmail = async (to, subject, text, html) => {
     const mailOptions = {
-        from: "lavishgehlod@gmail.com",
+        from: "durshbeats@gmail.com",
         to,
         subject,
         text,
