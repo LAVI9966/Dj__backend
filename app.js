@@ -1,3 +1,18 @@
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// import fs from 'fs-extra';
+// const currentDir = __dirname;
+// const destinationFolder = path.join(currentDir, '/dist');
+// const sourceFolder = path.join(currentDir, '../frontend/dist');
+// fs.copy(sourceFolder, destinationFolder)
+//     .then(() => console.log('Folder copied successfully!'))
+//     .catch(err => console.error(err));
+
+
+
+
 import express from "express";
 // import { sendEmail } from "./utils/sendmail.js";
 
@@ -11,12 +26,6 @@ import cloudinary from "cloudinary";
 import { otpModel } from "./models/otp.js";
 import { User } from "./models/user.js";
 import { FavSong } from "./models/favsong.js";
-import path from 'path'
-import { fileURLToPath } from 'url';
-import fs from 'fs-extra';
-// Define __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -35,26 +44,21 @@ cloudinary.config({
     api_secret: "lXdQ1v__1-Kg7CA86C6efludBws"
 });
 
-// const currentDir = __dirname;
-// const destinationFolder = path.join(currentDir, '/dist');
-// const sourceFolder = path.join(currentDir, '../frontend/dist');
-// fs.copy(sourceFolder, destinationFolder)
-//     .then(() => console.log('Folder copied successfully!'))
-//     .catch(err => console.error(err));
-
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+
+}));
 app.use(cors());
-
-app.use(express.static(path.join(__dirname, '/dist')));
-
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-// });
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/dist/index.html'));
-});
 
 
 // Add songs
@@ -395,7 +399,7 @@ app.post('/add-to-favorites', async (req, res) => {
     }
 });
 app.get('/get-favorites', async (req, res) => {
-    const { userid } = req.query; // Expecting userid to be passed as a 
+    const { userid } = req.query; // Expecting userid to be passed as a
 
     console.log("user id eh ye ", userid)
     if (!userid) {

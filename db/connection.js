@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const uri = 'mongodb+srv://lavishgehlod:lavishgehlod@cluster0.vp8iwsu.mongodb.net/Dursh';
 const uri2 = 'mongodb+srv://durshbeats:lavishgehlod@cluster0.mh3k4.mongodb.net/Durshbeats';
 
-mongoose.connect(uri)
+mongoose.connect(uri2)
     .then(() => console.log('Connected to MongoDB successfully'))
     .catch((error) => console.error('Error connecting to MongoDB:', error));
 
