@@ -46,7 +46,7 @@ cloudinary.config({
 
 
 app.use(express.json());
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://dj-ssmj.onrender.com/'];
 
 app.use(cors({
     origin: function (origin, callback) {
