@@ -11,6 +11,12 @@ import cloudinary from "cloudinary";
 import { otpModel } from "./models/otp.js";
 import { User } from "./models/user.js";
 import { FavSong } from "./models/favsong.js";
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+// Define __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -33,10 +39,15 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(cors());
 
-app.get("/", (req, res) => {
-    console.log("Chud gaye guru")
-    return res.send("hello world");
+app.use(express.static(path.join(__dirname, '/dist')));
+
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+// });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/dist/index.html'));
 });
+
 
 // Add songs
 app.get("/fetchallsongs", async (req, res) => {
