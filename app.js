@@ -155,7 +155,7 @@ const transporter = nodemailer.createTransport({
     port: 465,
     auth: {
         user: "durshbeats@gmail.com",
-        pass: "ntvjgguhsntpzspt"
+        pass: "mpgvhddcbsljxeow"
     }
 });
 
@@ -183,6 +183,8 @@ export const sendEmail = async (to, subject, text, html, attachment) => {
     }
 };
 app.post("/send_email", upload.single("attachment"), async (req, res) => {
+
+
     const { to, subject, text, html } = req.body;
     const attachment = req.file;
     console.log("yaha tak agay hu ", req.body)
@@ -204,7 +206,7 @@ export const sendotpEmail = async (to, subject, text, html) => {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent: " + info.response);
+        console.log("Email sent: to " + to + info.response);
     } catch (error) {
         console.log("Error:", error);
     }
@@ -420,10 +422,10 @@ app.get('/get-favorites', async (req, res) => {
 });
 app.get('/fetchsong', async (req, res) => {
     const { songid } = req.query;
-    console.log("Fuck me hard ", songid)
+    console.log("this is song id", songid)
     try {
         const song = await MusicTrack.findOne({ _id: songid });
-        console.log("pussy ", song)
+        console.log("Song is  ", song)
         return res.status(200).json(song);
     } catch (error) {
         console.error("Error fetching  songs:", error);
