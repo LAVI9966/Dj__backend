@@ -47,7 +47,7 @@ cloudinary.config({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const allowedOrigins = ['https://dj-35n.pages.dev', 'https://durshbeats.netlify.app/', 'https://durshbeats.store', 'http://localhost:5173', 'http://localhost:3000', 'https://dj-ssmj.onrender.com'];
+const allowedOrigins = ['https://dj-35n.pages.dev', 'https://durshbeats.netlify.app', 'https://durshbeats.store', 'http://localhost:5173', 'http://localhost:3000', 'https://dj-ssmj.onrender.com'];
 
 app.use(cors({
     origin: function (origin, callback) {
